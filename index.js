@@ -1,19 +1,16 @@
-var btn=document.querySelector("#searchButton");
-btn.addEventListener("click", posterPreparation);
+var btn=document.querySelector("#searchForm");
+btn.addEventListener("submit", posterPreparation);
 
 
 function posterPreparation(event){
     event.preventDefault();
     document.querySelector("#poster").innerHTML="";
 
-    // var movieName=document.querySelector("#movieInput");
+    var movieName=document.querySelector("#movieInput").value;
+    console.log(movieName)
     var posterDiv=document.createElement("div");
-    posterDiv.setAttribute("id","posterdiv");
-
-    
-    var movieDetails=search();
-    console.log(movieDetails)
-
+    posterDiv.setAttribute("id","posterdiv");    
+    var movieDetails=search(movieName);
     if(movieDetails==="error"){
         var errimage=document.createElement("img");
         errimage.src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTOV2Ge2RDcQtkHTvWTdDqLwyJzHmzceKGFKw&usqp=CAU";
@@ -43,22 +40,12 @@ function posterPreparation(event){
     }
 }
 
-        function search(){
-            var movieName="rrr";
-        var result= fetch(`http://www.omdbapi.com/?t=${movieName}&apikey=3b49127f`)
-        result.then(res=>{return res.json()})
-        .then(data=>{return console.log("hai"+data)})
-        .catch(err=>err)
-        result((resolved, rejected){
-            resolved("hai")
-        })
-
-        result.then((res)=>console.log(res)).catch((err)=>console.log(err))
+        async function search(movieName){
+            try{
+                var result= fetch(`http://www.omdbapi.com/?t=${movieName}&apikey=3b49127f`);
+                var data=await result.json();
+                return data;
+            }catch(err){
+                return "error"
+            }
         }
-
-// async function search(){
-//     var movie=document.querySelector("#movieName").value;
-//    var a=await fetch(`http://www.omdbapi.com/?t=${movie}&apikey=3b49127f`)
-//    var ans=await a.json();
-//    console.log(ans.Title);
-// }
